@@ -29,7 +29,7 @@ function makeMineGrid(sizeY = Int, sizeX = Int) {
         // Creates an array
         let tempArr = []
         // Adds 10 values to them (down)
-        for(let i = sizeX; i>0; i--) tempArr.push("-")
+        for(let i = sizeX; i>0; i--) tempArr.push("$")
         result.push(tempArr)
     }
     return result
@@ -92,13 +92,15 @@ function countAdjacentMines(squareValues = arr) {
 //
 
 function printDangerGrid(mineGrid = arr) {
-    let size = mineGrid.length-1
-    for(let i = size; i>0; i--) {
-        for(let f = size; i>0; i--) {
+    let size = mineGrid.length
+    for(let i = 0; i<size; i++) {
+        for(let f = 0; f<size; f++) {
             let cellDanger = countAdjacentMines(mineGrid[i][f])
+            console.log(cellDanger)
             mineGrid[i][f] = cellDanger
         }
     }
+    return mineGrid
 }
 
 function displayMineGrid(mineGrid = arr) {
@@ -112,8 +114,8 @@ function runGameLoop(mineGrid = arr) {
     let dangerCounter = countAdjacentMines(thisCellSquare)
     console.log(dangerCounter)
 
-    printDangerGrid(mineGrid)
-    displayMineGrid(mineGrid)
+    let dangerGrid = printDangerGrid(mineGrid)
+    displayMineGrid(dangerGrid)
 }
 
 let mineGrid = makeMineGrid(5, 5)
