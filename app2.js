@@ -29,11 +29,16 @@ const mineGrid = (arr) => {
     const checkAccess = (y = int, x = int) => arr[y] ? arr[y][x] : null
 
     /*NOTE Create a helper function that calculates the number of adjacent mines around the cell at chosen position of (y,x)*/
-    const getMine = (y = int, x = int) = {
+    const getMine = (y = int, x = int) => {
         /*NOTE An array is constructed with elements reperesenting the content of adjacent cells, 
-        */
+        we are going to use checkAccess() for each of the eight possible adjacent cells */
         return [
-
-        ]
+            checkAccess(y+1, x-1), checkAccess(y+1, x), checkAccess(y+1, x+1),
+            checkAccess(y, x-1), checkAccess(y, x+1),
+            checkAccess(y-1, x-1), checkAccess(y-1, x), checkAccess(y-1, x+1)
+            //NOTE Construct an array of values representing the content of the adjacent cells, after construction
+            // We will use .filter() method to keep only those element that are mines ('$')
+        ].filter(adjCell => adjCell === "$").length.toString()
     }
+    return arr.map((r,y) => r.map((c,x) => c === "-" ? getMine(x,y) : c))
 }

@@ -36,57 +36,86 @@ function makeMineGrid(sizeY = Int, sizeX = Int) {
 }
 
 //
-function findSingleCellState(coordinateX = Int, coordinateY = Int, gameGrid = arr) {
+function findSingleCellState(coordinateY = Int, coordinateX = Int, mineGrid = arr) {
     // Adjusts the coordinates to account for index starting at 0
     let indexCoordinateY = coordinateY-1
     let indexCoordinateX = coordinateX-1
     // Finds the array that the cell is in, then what index that value is at
-    let cell = (gameGrid[indexCoordinateY][indexCoordinateX])
+    let cell = (mineGrid[indexCoordinateY][indexCoordinateX])
     // Predefines the state of the cell for a default value
     let cellState = false
     // Creates an array to display status
     let result = []
-    // False means the cell is dead
-    if(cell == 0) cellState = false
-    // True means the cell is alive
-    else if(cell == 1) cellState = true
+    // False means the cell is not a mine
+    if(cell == "-") cellState = false
+    // True means the cell is a mine
+    else if(cell == "$") cellState = true
     // Adds all of the values to display the status of a cell
-    result.push(coordinateX)
     result.push(coordinateY)
+    result.push(coordinateX)
     result.push(cell)
     return result
 }
 
-function findSurroundingCellState(coordinateY = Int, coordinateX = Int, gameGrid = arr) {
+function findSurroundingCellState(coordinateY = Int, coordinateX = Int, mineGrid = arr) {
     // Array result with the values of every cell in a square
     let result = []
     // Finds the state of the 3 cells above the origin cell
     for(let i = 0; i < 3; i++) {
-        result.push(findSingleCellState((coordinateX-(i-1)), coordinateY-1, gameGrid))
+        result.push(findSingleCellState((coordinateX-(i-1)), coordinateY-1, mineGrid))
     }
     // Finds the state of the 3 cells in line with the origin cell including itself
     for(let i = 0; i < 3; i++) {
-        result.push(findSingleCellState((coordinateX-(i-1)), coordinateY, gameGrid))
+        result.push(findSingleCellState((coordinateX-(i-1)), coordinateY, mineGrid))
     }
     // Finds the state of the 3 cells below the origin cell
     for(let i = 0; i < 3; i++) {
-        result.push(findSingleCellState((coordinateX-(i-1)), coordinateY+1, gameGrid))
+        result.push(findSingleCellState((coordinateX-(i-1)), coordinateY+1, mineGrid))
+    }
+    return result
+}
+
+function countAdjacentMines(squareValues = arr) {
+    let mainCell = squareValues[4]
+    let mineCells = []
+    let result = 0
+    for(i in squareValues) {
+        if(squareValues[i] !== mainCell) {
+            if(squareValues[i][2] == "$") {
+                mineCells.push(squareValues[i])
+                result++
+            }
+        }
     }
     return result
 }
 //
 
+function printDangerGrid(mineGrid = arr) {
+    let size = mineGrid.length-1
+    for(let i = size; i>0; i--) {
+        for(let f = size; i>0; i--) {
+            let cellDanger = countAdjacentMines(mineGrid[i][f])
+            mineGrid[i][f] = cellDanger
+        }
+    }
+}
+
 function displayMineGrid(mineGrid = arr) {
     mineGrid.forEach(v=>console.log(...v))
 }
 
-function initialiseGame() {
-    let mineGrid = makeMineGrid(5, 5)
-}
+function runGameLoop(mineGrid = arr) {
+    displayMineGrid(mineGrid)
 
-function runGameLoop() {
+    let thisCellSquare = findSurroundingCellState(3, 3, mineGrid)
+    let dangerCounter = countAdjacentMines(thisCellSquare)
+    console.log(dangerCounter)
+
+    printDangerGrid(mineGrid)
     displayMineGrid(mineGrid)
 }
 
-initialiseGame()
-runGameLoop()
+let mineGrid = makeMineGrid(5, 5)
+
+runGameLoop(mineGrid)
