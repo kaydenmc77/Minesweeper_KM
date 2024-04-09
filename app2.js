@@ -41,7 +41,7 @@ function getRandomInt(min, max) {
 const secretNumber = getRandomInt(1, 100)
 
 //Counter for number of attempts
-let attemps = 0
+let attempts = 0
 
 console.log('Guess the number! It\'s between 1 and 100. You have unlimited attempts!')
 
